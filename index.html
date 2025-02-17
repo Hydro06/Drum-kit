@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drum-Kit</title>
+    <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('/img/images\ \(3\).jpeg'); /* Replace with actual image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border-radius: 50%; */
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0px 5px 15px rgba(255, 255, 255, 0.2), 
+                0px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.box {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, #222, #000);
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.1s ease-in-out;
+}
+
+/* Arranging keys in a drum set layout */
+.box:nth-child(1) { top: 20px; left: 50%;  }  /* Ride */
+.box:nth-child(2) { top: 150px; left: 15%; } /* Kick */
+.box:nth-child(3) { top: 150px; right: 15%; } /* Snare */
+.box:nth-child(4) { bottom: 20px; left: 30%; } /* Tom 1 */
+.box:nth-child(5) { bottom: 20px; right: 30%; } /* Tom 2 */
+.box:nth-child(6) { top: 20px; right: 10%; } /* Crash */
+
+.box.playing {
+    transform: scale(1.2);
+    background: radial-gradient(circle, #444, #111);
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Arranging keys in a drum set layout */
+.box:nth-child(1) { 
+    left: 0;
+    top: 50%;
+    margin-left: 50px;
+} /* A - Left Center */
+
+.box:nth-child(2) { 
+    top: 100px; 
+    left: 180px; 
+    margin-left: 50px;
+} /* S - Top Left (Margin 50px) */
+
+.box:nth-child(3) { 
+    top: 60px; 
+    right:45%; 
+    margin-left: 100px;
+} /* D - Top Left (Margin 100px) */
+
+.box:nth-child(4) { 
+    top: 90px;
+    left: 61%; 
+    /* margin-right: 100px; */
+} /* F - Top Right (Margin 100px) */
+
+.box:nth-child(5) { 
+    top: 50%; 
+    right: 8%; 
+    margin-right: 50px;
+} /* G - Top Right (Margin 50px) */
+
+.box:nth-child(6) { 
+    left: 39%;
+    top: 50%;
+    
+} /* H - Center */
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+    }
+    .box {
+        position: static;
+        width: 100px;
+        height: 100px;
+        font-size: 1.5rem;
+        margin: 10px;
+    }
+    .box:nth-child(n) {
+        margin: 10px auto;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box" data-key="65">A</div>
+        <div class="box" data-key="83">S</div>
+        <div class="box" data-key="68">D</div>
+        <div class="box" data-key="70">F</div>
+        <div class="box" data-key="71">G</div>
+        <div class="box" data-key="72">H</div>
+    </div>
+    
+    <script> 
+        const soundMap = {
+            65: "sound/rock-ride-bell.mp3",
+            83: "sound/rock-rack-tom-2.mp3",
+            68: "sound/kick-drum-percussive-7.mp3",
+            70: "sound/rock-rack-tom-1.mp3",
+            71: "sound/rock-crash-2.mp3",
+            72: "sound/rock-snare-2.mp3"
+        };
+
+        function playSound(event) {
+            if (!soundMap[event.keyCode]) {
+                console.log(`No sound mapped for key: ${event.keyCode}`);
+                return;
+            }
+
+            const audio = new Audio(soundMap[event.keyCode]);
+            const drum = document.querySelector(`.box[data-key="${event.keyCode}"]`);
+
+            if (audio && drum) {
+                audio.currentTime = 0;
+                audio.play().catch((err) => console.log("Audio play error:", err));
+
+                drum.classList.add('playing');
+                setTimeout(() => drum.classList.remove('playing'), 100);
+            }
+        }
+
+        document.addEventListener('keydown', playSound);
+    </script>
+</body>
+
+</html>
